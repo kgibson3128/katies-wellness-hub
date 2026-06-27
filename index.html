@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katie's Wellness Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blush: #e8c4b4;
+    --rose: #c4806a;
+    --deep: #3a2e28;
+    --mid: #4a3b33;
+    --light: #b08b7a;
+    --cream: #fffcfa;
+    --bg: #f9f5f2;
+    --card: #ffffff;
+    --border: #f0e8e3;
+    --tag-bg: #fdf0ea;
+    --accent: #fdf5f0;
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--bg);
+    color: var(--deep);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .header {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--deep);
+  }
+
+  .header-sub {
+    font-size: 0.72rem;
+    color: var(--light);
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--light);
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover { color: var(--rose); }
+  .nav-btn.active {
+    color: var(--rose);
+    border-bottom-color: var(--rose);
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--light);
+    margin-bottom: 16px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 14px;
+  }
+
+  /* SCHEDULE ROWS */
+  .sched-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid #faf5f2;
+  }
+  .sched-row:last-child { border-bottom: none; }
+
+  .sched-time {
+    font-size: 0.7rem;
+    color: var(--light);
+    min-width: 70px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding-top: 1px;
+  }
+
+  .sched-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blush);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .sched-dot.active { background: var(--rose); }
+
+  .sched-content { flex: 1; }
+
+  .sched-text {
+    font-size: 0.85rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .sched-note {
+    font-size: 0.72rem;
+    color: var(--light);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  .sched-tag {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--tag-bg);
+    color: var(--rose);
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* WEEKLY TABLE */
+  .week-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.72rem;
+  }
+
+  .week-table th {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--rose);
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+
+  .week-table td {
+    padding: 7px 6px;
+    color: var(--mid);
+    font-weight: 300;
+    border-bottom: 1px solid #faf5f2;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+
+  .week-table tr:last-child td { border-bottom: none; }
+
+  .week-table .time-col {
+    color: var(--light);
+    font-size: 0.65rem;
+    white-space: nowrap;
+    min-width: 55px;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 400;
+    white-space: nowrap;
+    margin: 1px 0;
+  }
+
+  .pill-gym { background: #ede0f7; color: #5a3a7a; }
+  .pill-walk { background: #d6f0e0; color: #2a6645; }
+  .pill-shower { background: #deeef7; color: #2a5068; }
+  .pill-care { background: #fde8e8; color: #9a4a4a; }
+  .pill-curfew { background: #f0f0f0; color: #666; }
+  .pill-social { background: #fef3d6; color: #7a5a10; }
+  .pill-trip { background: #e8f0fe; color: #2a4a9a; }
+  .pill-dinner { background: #fdf0ea; color: var(--rose); }
+  .pill-free { background: #f5f5f5; color: #888; }
+
+  /* MENU CARDS */
+  .menu-card {
+    background: var(--accent);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    border: 1px solid var(--blush);
+  }
+
+  .menu-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+
+  .menu-subtitle {
+    font-size: 0.72rem;
+    color: var(--light);
+    font-style: italic;
+    margin-bottom: 14px;
+    font-weight: 300;
+  }
+
+  .menu-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .menu-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    color: var(--mid);
+    font-weight: 300;
+  }
+
+  /* RULE BOXES */
+  .rule-box {
+    background: white;
+    border-radius: 10px;
+    padding: 13px 16px;
+    margin-bottom: 9px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .rule-num {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--rose);
+    min-width: 18px;
+    padding-top: 1px;
+  }
+
+  .rule-text {
+    font-size: 0.83rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .rule-text strong {
+    font-weight: 500;
+    color: var(--deep);
+  }
+
+  /* ADVICE BLOCKS */
+  .advice-block {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 9px;
+    border-left: 3px solid var(--blush);
+  }
+
+  .advice-block.highlight { border-left-color: var(--rose); }
+
+  .advice-label {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--rose);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .advice-text {
+    font-size: 0.83rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .advice-text ul {
+    padding-left: 16px;
+    margin-top: 6px;
+  }
+
+  .advice-text li {
+    margin-bottom: 4px;
+  }
+
+  .advice-text strong {
+    font-weight: 500;
+    color: var(--deep);
+  }
+
+  /* STEP BLOCKS */
+  .steps {
+    counter-reset: step;
+  }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    background: var(--rose);
+    color: white;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-content {
+    flex: 1;
+  }
+
+  .step-title {
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: var(--deep);
+    margin-bottom: 3px;
+  }
+
+  .step-text {
+    font-size: 0.8rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .step-text ul {
+    padding-left: 14px;
+    margin-top: 4px;
+  }
+
+  .step-text li { margin-bottom: 3px; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 14px;
+  }
+
+  .divider span {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--light);
+    white-space: nowrap;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: linear-gradient(135deg, #fdf0ea, #faf5f2);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1px solid var(--blush);
+  }
+
+  .highlight-box p {
+    font-size: 0.85rem;
+    color: var(--mid);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .highlight-box strong {
+    font-weight: 500;
+    color: var(--deep);
+  }
+
+  /* FILTER TABS */
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--light);
+    font-size: 0.72rem;
+    font-family: 'Jost', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-tab.active {
+    background: var(--rose);
+    border-color: var(--rose);
+    color: white;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 500px) {
+    .week-table { font-size: 0.65rem; }
+    .week-table th, .week-table td { padding: 6px 4px; }
+    .pill { font-size: 0.6rem; padding: 2px 5px; }
+    .header h1 { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Katie's Wellness Hub</h1>
+    <span class="header-sub">Summer 2026</span>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="show('weekly')">📅 Weekly</button>
+    <button class="nav-btn" onclick="show('morning')">🌅 Morning</button>
+    <button class="nav-btn" onclick="show('workday')">💻 Work Day</button>
+    <button class="nav-btn" onclick="show('evening')">🌙 Evening</button>
+    <button class="nav-btn" onclick="show('menus')">🌿 Menus</button>
+    <button class="nav-btn" onclick="show('rules')">📌 Rules</button>
+  </nav>
+</div>
+
+<div class="main">
+
+  <!-- ======================== WEEKLY ======================== -->
+  <div id="weekly" class="section active">
+    <div class="section-title">Weekly Overview</div>
+
+    <div class="card">
+      <div class="card-title">Evening Break at a Glance</div>
+      <div style="overflow-x:auto;">
+        <table class="week-table">
+          <thead>
+            <tr>
+              <th class="time-col">Time</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="time-col">5–6pm</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td><span class="pill pill-gym">🏋️ Gym</span></td>
+              <td><span class="pill pill-walk">🚶 Walk</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">6–6:30</td>
+              <td><span class="pill pill-dinner">🍽️ Dinner</span></td>
+              <td><span class="pill pill-dinner">🍽️ Dinner</span></td>
+              <td><span class="pill pill-dinner">🍽️ Dinner</span></td>
+              <td><span class="pill pill-care">🎒 Get ready</span></td>
+              <td><span class="pill pill-care">🎒 Get ready</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">6:30–7</td>
+              <td><span class="pill pill-gym">🏃 Gym prep</span></td>
+              <td><span class="pill pill-gym">🏃 Gym prep</span></td>
+              <td><span class="pill pill-walk">🏃 Walk prep</span></td>
+              <td><span class="pill pill-dinner">🍽️ Dinner</span></td>
+              <td><span class="pill pill-dinner">🍽️ Dinner</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">7–8pm</td>
+              <td><span class="pill pill-gym">🏋️ Gym</span></td>
+              <td><span class="pill pill-gym">🏋️ Gym</span></td>
+              <td><span class="pill pill-walk">🚶 Walk</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">8–9pm</td>
+              <td><span class="pill pill-shower">🚿 Shower + hair</span></td>
+              <td><span class="pill pill-shower">🚿 Shower</span></td>
+              <td><span class="pill pill-shower">🚿 Shower + hair</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">9–9:30</td>
+              <td><span class="pill pill-care">🧴 Body care</span></td>
+              <td><span class="pill pill-care">🧴 Body care</span></td>
+              <td><span class="pill pill-care">🧴 Body care</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+              <td><span class="pill pill-trip">🗺️ Trip</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">9:30–10</td>
+              <td><span class="pill pill-curfew">Curfew</span></td>
+              <td><span class="pill pill-curfew">Curfew</span></td>
+              <td><span class="pill pill-curfew">Curfew</span></td>
+              <td><span class="pill pill-curfew">Curfew</span></td>
+              <td><span class="pill pill-curfew">Curfew</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">10–10:30</td>
+              <td><span class="pill pill-social">👥 Hangout?</span></td>
+              <td><span class="pill pill-social">👥 Hangout?</span></td>
+              <td><span class="pill pill-social">👥 Hangout?</span></td>
+              <td><span class="pill pill-social">👥 Hangout?</span></td>
+              <td><span class="pill pill-social">👥 Hangout?</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">10:30–11</td>
+              <td><span class="pill pill-care">💇 Hair & bed</span></td>
+              <td><span class="pill pill-care">💇 Hair & bed</span></td>
+              <td><span class="pill pill-care">💇 Hair & bed</span></td>
+              <td><span class="pill pill-free">🌟 Free choice</span></td>
+              <td><span class="pill pill-free">🌟 Free choice</span></td>
+            </tr>
+            <tr>
+              <td class="time-col">11pm</td>
+              <td colspan="5" style="text-align:center; color: var(--light); font-style:italic; font-size:0.72rem;">😴 Lights out</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Key Weekly Reminders</div>
+      <div class="rule-box">
+        <span class="rule-num">🚿</span>
+        <span class="rule-text"><strong>Hair wash days:</strong> Monday and Wednesday — allow the full 8–9pm hour for shower, wash, dry and style.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">🏋️</span>
+        <span class="rule-text"><strong>Lifting days:</strong> Monday, Tuesday, Thursday. Walk on Wednesday and Friday.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">🌟</span>
+        <span class="rule-text"><strong>Thu/Fri free choice:</strong> Shower, pick from the decompress menu, or just get an early night. No pressure.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">🛁</span>
+        <span class="rule-text"><strong>Weekends:</strong> Unstructured — use the spa & self-care menu when you have time and energy.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== MORNING ======================== -->
+  <div id="morning" class="section">
+    <div class="section-title">Morning Routine</div>
+
+    <div class="card">
+      <div class="card-title">Every Morning — 7:00am to 8:30am</div>
+
+      <div class="sched-row">
+        <span class="sched-time">7:00</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">Wake up & water</div>
+          <div class="sched-note">Open blinds, full glass of water before anything else. No scrolling for 10 mins.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">7:10</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Skin, makeup & hair</div>
+          <div class="sched-note">Your protected calm time. Podcast or playlist on. SPF every single day.</div>
+        </div>
+        <span class="sched-tag">40 mins</span>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">7:50</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Breakfast</div>
+          <div class="sched-note">Your own supplies — protein yoghurt, fruit, coffee or tea. Sit down if you can.</div>
+        </div>
+        <span class="sched-tag">10 mins</span>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">8:00</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Review today's notes & morning meeting</div>
+          <div class="sched-note">Quick read-through of what you prepped yesterday. No scrambling — just reviewing.</div>
+        </div>
+        <span class="sched-tag">20 mins</span>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">8:20</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">Walk to morning meeting</div>
+          <div class="sched-note">Fill your water bottle on the way. Arrive composed, not frazzled.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">8:30</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">Morning meeting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>✨ <strong>Remember:</strong> Your hair and skin are already prepped from the night before — mornings are light and calm by design. Protect this time.</p>
+    </div>
+  </div>
+
+  <!-- ======================== WORK DAY ======================== -->
+  <div id="workday" class="section">
+    <div class="section-title">Work Day Routine</div>
+
+    <div class="card">
+      <div class="card-title">Daily Schedule</div>
+
+      <div class="sched-row">
+        <span class="sched-time">8:30–8:45</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">Morning meeting</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">8:45–9:15</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Greet tutors & set up classrooms</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">9:15–9:30</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">📋 Daily planning</div>
+          <div class="sched-note">See planning method below.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">9:30–10:00</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Zoom with manager</div>
+          <div class="sched-note">Weeks when scheduled only.</div>
+        </div>
+        <span class="sched-tag">some weeks</span>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">9:30–12:00</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">💻 Focused work block</div>
+          <div class="sched-note">Your golden time. Protect it fiercely. Headphones on = focus mode.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">12:00–14:00</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">🍽️ Lunch — protected social time</div>
+          <div class="sched-note">Enjoy it! Chatting with tutors is one of your favourite parts. Work only for genuine emergencies.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">14:00–15:30</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">💻 Focused work & reactive tasks</div>
+          <div class="sched-note">Finish anything outstanding. Batch emails and messages here rather than throughout the day.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">15:30–16:00</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">📋 Close-down & tomorrow's meeting prep</div>
+          <div class="sched-note">See close-down method below. This is the key habit to protect.</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">16:00–17:00</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Help tutors with invoices & feedback forms</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">17:00–17:45</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Relaxed staff time & light check-ins</div>
+        </div>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">17:45–18:00</span>
+        <div class="sched-dot"></div>
+        <div class="sched-content">
+          <div class="sched-text">Invoice task with tutor</div>
+          <div class="sched-note">Mon–Wed only.</div>
+        </div>
+        <span class="sched-tag">Mon–Wed</span>
+      </div>
+      <div class="sched-row">
+        <span class="sched-time">18:00</span>
+        <div class="sched-dot active"></div>
+        <div class="sched-content">
+          <div class="sched-text">🍽️ Dinner → Evening routine begins</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>Daily Planning Method</span></div>
+
+    <div class="card">
+      <div class="card-title">📋 Daily Planning — 9:15am (15 mins)</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Check the landscape</div>
+            <div class="step-text">Open the shared timetable — what are the big events today? Any trips, special activities, or unusual schedule changes?</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Check your notes & parking lot</div>
+            <div class="step-text">Student birthdays or special occasions. Unresolved issues from yesterday. Review your parking lot Google Doc.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Build your Todoist list</div>
+            <div class="step-text">Prioritised order — not by time, just by importance. Ask yourself:
+              <ul>
+                <li>What <strong>must</strong> happen today?</li>
+                <li>What would be <strong>great</strong> to get done?</li>
+                <li>What can <strong>wait</strong> if needed?</li>
+              </ul>
+              Use pen and paper to think it through first if helpful. Use priority flags for anything that truly can't slip.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Sense check</div>
+            <div class="step-text">Any interruptions likely today — Zoom call, busy handover, known student issues? Anything to delegate to a supervisor?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>Close-Down Method</span></div>
+
+    <div class="card">
+      <div class="card-title">📋 Close-Down — 3:30pm (30 mins)</div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Parking lot</div>
+            <div class="step-text">Anything unresolved or unfinished goes into your Google Doc parking lot. Write down exactly where you got to so tomorrow-you doesn't have to remember.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Tomorrow's morning meeting prep</div>
+            <div class="step-text">Check tomorrow's shared timetable and brief doc. Note the key things to communicate — evening activity, student birthdays, delegations, reminders. Add any context you'll need to explain in person. Well-briefed supervisors = protected evenings.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Clear your head</div>
+            <div class="step-text">Review Todoist — anything left undone that needs flagging? Any issues to hand off before you finish? Write down anything that's nagging at you.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Close down ✅</div>
+            <div class="step-text">Close unnecessary tabs and apps. You're done with focused work for the day.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"><span>Productivity Toolkit</span></div>
+
+    <div class="advice-block highlight">
+      <div class="advice-label">The One Task Rule</div>
+      <div class="advice-text">Before you open anything, decide what your current task is. When you notice yourself drifting to another task, gently return. Add other tasks to Todoist so you don't lose them — but don't switch to them mid-flow.</div>
+    </div>
+
+    <div class="advice-block">
+      <div class="advice-label">Phone & Social Boundaries</div>
+      <div class="advice-text">
+        <ul>
+          <li>During focused blocks — phone face down or on do not disturb</li>
+          <li>Headphones on = focus mode. Let this signal to others too</li>
+          <li>If you're in a shared space and can't fully focus, use the time for lighter reactive tasks rather than fighting for a flow state that won't come</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="advice-block">
+      <div class="advice-label">The Two Minute Rule</div>
+      <div class="advice-text">If something unexpected lands and takes less than two minutes — deal with it immediately. If it takes longer, add it to Todoist and return to your current task.</div>
+    </div>
+
+    <div class="advice-block highlight">
+      <div class="advice-label">Unexpected Task Filter</div>
+      <div class="advice-text">When something urgent lands, ask yourself:
+        <ul>
+          <li>Will something bad happen in the next hour if I don't deal with this? → <strong>Deal with it now</strong></li>
+          <li>Is this actually someone else's job? → <strong>Delegate it</strong></li>
+          <li>Can this wait until my reactive block? → <strong>Add to Todoist and park it</strong></li>
+          <li>Is this going to keep nagging at me? → <strong>Add to parking lot and consciously set it aside</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="advice-block">
+      <div class="advice-label">Flow State Protection</div>
+      <div class="advice-text">Morning 9:15–12:00 is your best focus time — protect it fiercely. Save emails, messages, and reactive tasks for the afternoon block where possible. If you're in a good flow state, don't stop for anything non-urgent.</div>
+    </div>
+  </div>
+
+  <!-- ======================== EVENING ======================== -->
+  <div id="evening" class="section">
+    <div class="section-title">Evening Routine</div>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="showEve('montuwed', this)">Mon · Tue · Wed</button>
+      <button class="filter-tab" onclick="showEve('thufri', this)">Thu · Fri</button>
+    </div>
+
+    <div id="montuwed">
+      <div class="card">
+        <div class="card-title">Monday — Gym + Hair Wash</div>
+        <div class="sched-row">
+          <span class="sched-time">6:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🍽️ Dinner</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🏃 Get ready & head to gym</div></div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">7:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">🏋️ Gym — lifting session</div></div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">8:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content">
+            <div class="sched-text">🚿 Shower + hair wash, dry & style</div>
+            <div class="sched-note">Full hair wash night — allow the whole hour.</div>
+          </div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🧴 Body care, skincare & meeting prep</div>
+            <div class="sched-note">Fake tan moisturiser, skincare tracker, quick check of tomorrow's plan.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:30</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">Curfew</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">👥 Optional staff hangout</div>
+            <div class="sched-note">Say yes when you have energy. Skip without guilt when you don't.</div>
+          </div>
+          <span class="sched-tag">optional</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">11:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">😴 Lights out</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tuesday — Gym</div>
+        <div class="sched-row">
+          <span class="sched-time">6:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🍽️ Dinner</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🏃 Get ready & head to gym</div></div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">7:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">🏋️ Gym — lifting session</div></div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">8:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content">
+            <div class="sched-text">🚿 Shower</div>
+            <div class="sched-note">Body wash only tonight.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">8:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🧴 Body care & skincare</div>
+            <div class="sched-note">Fake tan moisturiser, skincare tracker.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">📋 Meeting prep & wind-down</div>
+            <div class="sched-note">Quick check of tomorrow. Then genuinely switch off.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:30</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">Curfew</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">👥 Optional staff hangout</div>
+          </div>
+          <span class="sched-tag">optional</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">💇 Hair & bed prep</div></div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">11:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">😴 Lights out</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Wednesday — Walk + Hair Wash</div>
+        <div class="sched-row">
+          <span class="sched-time">6:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🍽️ Dinner</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🏃 Get ready & head out for walk</div></div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">7:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content">
+            <div class="sched-text">🚶 Evening walk</div>
+            <div class="sched-note">Cambridge is beautiful in the evening. Podcast, music, or just quiet.</div>
+          </div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">8:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content">
+            <div class="sched-text">🚿 Shower + hair wash, dry & style</div>
+            <div class="sched-note">Full hair wash night — allow the whole hour.</div>
+          </div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🧴 Body care, skincare & meeting prep</div>
+            <div class="sched-note">Fake tan moisturiser, skincare tracker, quick check of tomorrow's plan.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:30</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">Curfew</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">👥 Optional staff hangout</div>
+          </div>
+          <span class="sched-tag">optional</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">11:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">😴 Lights out</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="thufri" style="display:none;">
+      <div class="card">
+        <div class="card-title">Thursday — Gym + Trip</div>
+        <div class="sched-row">
+          <span class="sched-time">5:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">🏋️ Gym — lifting session</div></div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🎒 Get ready for trip</div>
+            <div class="sched-note">Get dressed, freshen up, pack your bag.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🍽️ Dinner (late)</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">7:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">🗺️ Trip</div></div>
+          <span class="sched-tag">2.5 hrs</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:30</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">Curfew</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">👥 Optional staff hangout</div></div>
+          <span class="sched-tag">optional</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🌟 Free choice</div>
+            <div class="sched-note">Optional shower, pick from the decompress menu, or just get an early night. Skincare non-negotiable!</div>
+          </div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">11:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">😴 Lights out</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Friday — Walk + Trip</div>
+        <div class="sched-row">
+          <span class="sched-time">5:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content">
+            <div class="sched-text">🚶 Walk</div>
+            <div class="sched-note">Gentle close to the week. Fresh air before a long evening.</div>
+          </div>
+          <span class="sched-tag">1 hour</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🎒 Get ready for trip</div>
+            <div class="sched-note">Get dressed, freshen up, pack your bag.</div>
+          </div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">6:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">🍽️ Dinner (late)</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">7:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">🗺️ Trip</div></div>
+          <span class="sched-tag">2.5 hrs</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">9:30</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">Curfew</div></div>
+          <span class="sched-tag">30 mins</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:00</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content"><div class="sched-text">👥 Optional staff hangout</div></div>
+          <span class="sched-tag">optional</span>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">10:30</span>
+          <div class="sched-dot"></div>
+          <div class="sched-content">
+            <div class="sched-text">🌟 Free choice</div>
+            <div class="sched-note">Optional shower, pick from the decompress menu, or just get an early night. Skincare non-negotiable!</div>
+          </div>
+        </div>
+        <div class="sched-row">
+          <span class="sched-time">11:00</span>
+          <div class="sched-dot active"></div>
+          <div class="sched-content"><div class="sched-text">😴 Lights out</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== MENUS ======================== -->
+  <div id="menus" class="section">
+    <div class="section-title">Menus & Advice</div>
+
+    <div class="menu-card">
+      <div class="menu-title">😌 Quick Decompress Menu</div>
+      <div class="menu-subtitle">For Thu/Fri nights or any evening your brain won't switch off</div>
+      <div class="menu-items">
+        <span class="menu-item">📖 Read your book</span>
+        <span class="menu-item">▶️ YouTube essay</span>
+        <span class="menu-item">📺 Light comedy or comfort TV</span>
+        <span class="menu-item">🎮 Puzzle or escape room game</span>
+        <span class="menu-item">🎵 Music & dancing</span>
+        <span class="menu-item">🎭 Dropout.tv</span>
+        <span class="menu-item">🛁 Face mask</span>
+        <span class="menu-item">📌 Browse Pinterest</span>
+        <span class="menu-item">🛍️ Online window shopping</span>
+        <span class="menu-item">🛏️ Bed-rotting with something easy on</span>
+        <span class="menu-item">📞 Call family</span>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <div class="menu-title">😔 Bad Day Toolkit</div>
+      <div class="menu-subtitle">When everything has gone wrong and you need to reset</div>
+      <div class="menu-items">
+        <span class="menu-item">📞 Call your best friend</span>
+        <span class="menu-item">📞 Talk to family</span>
+        <span class="menu-item">💻 Life project with Claude</span>
+        <span class="menu-item">👩‍💻 Learn something or do some coding</span>
+        <span class="menu-item">🛍️ Buy yourself a small non-food treat</span>
+        <span class="menu-item">🛁 Face mask & full skin pamper</span>
+        <span class="menu-item">🎵 Music & dancing — even one song</span>
+        <span class="menu-item">📓 Write it all down, then close the notebook</span>
+        <span class="menu-item">🚶 Get outside, even for 10 minutes</span>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <div class="menu-title">🛁 Weekend Spa Menu</div>
+      <div class="menu-subtitle">When you have more time and want to really indulge</div>
+      <div class="menu-items">
+        <span class="menu-item">🚿 Everything shower</span>
+        <span class="menu-item">🧖 Face mask</span>
+        <span class="menu-item">✨ Full body care — scrub, oil, tan</span>
+        <span class="menu-item">💆 Hair mask</span>
+        <span class="menu-item">📌 Pinterest with music on</span>
+        <span class="menu-item">🛍️ Online window shopping</span>
+        <span class="menu-item">🎬 Comfort film</span>
+        <span class="menu-item">🎮 Puzzle game with no time pressure</span>
+        <span class="menu-item">📖 Long reading session</span>
+        <span class="menu-item">🎵 Music & dancing</span>
+      </div>
+    </div>
+
+    <div class="menu-card">
+      <div class="menu-title">🍫 Emotional Eating Redirect</div>
+      <div class="menu-subtitle">When you want to reach for food but it's not hunger</div>
+      <div class="menu-items">
+        <span class="menu-item">⏸️ Pause — what am I actually feeling?</span>
+        <span class="menu-item">🛁 Face mask</span>
+        <span class="menu-item">🎮 Puzzle or escape room game</span>
+        <span class="menu-item">▶️ Put on a YouTube essay or show</span>
+        <span class="menu-item">🎵 Music & dancing</span>
+        <span class="menu-item">📌 Browse Pinterest</span>
+        <span class="menu-item">💬 Text or voice note a friend</span>
+        <span class="menu-item">🚶 Step outside for air</span>
+      </div>
+      <div style="margin-top: 12px; padding: 10px 14px; background: white; border-radius: 8px; border: 1px solid var(--border);">
+        <div style="font-size:0.72rem; font-weight:500; color:var(--rose); margin-bottom:4px; letter-spacing:0.5px;">ONE CONSCIOUS TREAT PER WEEK</div>
+        <div style="font-size:0.8rem; color:var(--mid); font-weight:300; line-height:1.5;">Something chosen in advance — a great coffee, something tasty, a cold diet coke. Planned, not reactive. Enjoyed fully and guilt-free. This is different from emotional eating.</div>
+      </div>
+    </div>
+
+    <div class="divider"><span>Nutrition Advice</span></div>
+
+    <div class="advice-block highlight">
+      <div class="advice-label">Plate Structure — Every Dining Hall Meal</div>
+      <div class="advice-text">
+        <strong>½ plate</strong> vegetables or salad &nbsp;·&nbsp; <strong>¼ plate</strong> protein &nbsp;·&nbsp; <strong>¼ plate</strong> carbs<br><br>
+        Always start with salad or veg before reaching for the main. One plate, no seconds — unless it's salad. Sit down and eat properly.
+      </div>
+    </div>
+
+    <div class="advice-block">
+      <div class="advice-label">Your Personal Stash</div>
+      <div class="advice-text">Keep in your room: protein yoghurts, fruit, pre-cut veg sticks, nuts or nut butter sachets, herbal teas. Use as breakfast top-ups, afternoon snacks, or post-gym fuel.</div>
+    </div>
+
+    <div class="advice-block">
+      <div class="advice-label">Water</div>
+      <div class="advice-text">Full glass on waking before coffee. Large bottle with you all day. 2–2.5 litres target. If you feel like snacking, drink water first and wait 10 minutes.</div>
+    </div>
+
+    <div class="advice-block highlight">
+      <div class="advice-label">Emotional Eating Game Plan</div>
+      <div class="advice-text">
+        <ul>
+          <li><strong>Pause rule:</strong> Am I actually hungry, or stressed/tired/frustrated? Wait 5 minutes.</li>
+          <li><strong>Redirect:</strong> Use the emotional eating menu above.</li>
+          <li><strong>Permission slip:</strong> If you do emotionally eat, do not spiral. Reset at the next meal, not tomorrow.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== RULES ======================== -->
+  <div id="rules" class="section">
+    <div class="section-title">The Rules</div>
+
+    <div class="card">
+      <div class="card-title">Non-Negotiables</div>
+      <div style="font-size:0.75rem; color:var(--light); font-style:italic; margin-bottom:14px; font-weight:300;">Protect these even on the worst days.</div>
+
+      <div class="rule-box">
+        <span class="rule-num">1</span>
+        <span class="rule-text"><strong>Water first thing, every morning</strong> — before coffee, no exceptions.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">2</span>
+        <span class="rule-text"><strong>Skincare tracker AM and PM, every day</strong> — even on Thu/Fri trip nights, even on the worst days.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">3</span>
+        <span class="rule-text"><strong>Hard mental switch-off after curfew</strong> — no work problem-solving in your wind-down window.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">4</span>
+        <span class="rule-text"><strong>3 lifting sessions per week</strong> — flex the days if needed, but get them in.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">5</span>
+        <span class="rule-text"><strong>Plate structure at every dining hall meal</strong> — half veg, quarter protein, quarter carbs.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">6</span>
+        <span class="rule-text"><strong>Close-down at 3:30pm every day</strong> — morning meeting prep is done the day before, always.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">7</span>
+        <span class="rule-text"><strong>11pm lights out</strong> — protect your sleep above almost everything else.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Flexible Rules</div>
+      <div style="font-size:0.75rem; color:var(--light); font-style:italic; margin-bottom:14px; font-weight:300;">Try to keep these, but be kind to yourself when life intervenes.</div>
+
+      <div class="rule-box">
+        <span class="rule-num">🚶</span>
+        <span class="rule-text"><strong>2 cardio sessions per week</strong> — walk or Zumba. A short walk still counts.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">👥</span>
+        <span class="rule-text"><strong>Say yes to the staff hangout when you have energy</strong> — connection is self-care too.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">🍫</span>
+        <span class="rule-text"><strong>One planned treat per week</strong> — enjoyed without guilt.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">📱</span>
+        <span class="rule-text"><strong>Phone away during focused work blocks</strong> — do not disturb is your friend.</span>
+      </div>
+      <div class="rule-box">
+        <span class="rule-num">🌿</span>
+        <span class="rule-text"><strong>Step outside for 5–10 minutes</strong> during the day — even on the busiest days.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🚨 Emergency Reset Protocol</div>
+      <div style="font-size:0.75rem; color:var(--light); font-style:italic; margin-bottom:14px; font-weight:300;">When a truly bad week hits and you've fallen off everything.</div>
+
+      <div class="advice-block highlight">
+        <div class="advice-label">Don't try to catch up all at once</div>
+        <div class="advice-text">Pick <strong>one thing</strong> to restart. Just one.</div>
+      </div>
+      <div class="advice-block">
+        <div class="advice-label">Start with the evening routine</div>
+        <div class="advice-text">It's the easiest thing you control and it signals safety to your nervous system. Shower, skincare, bed. That's enough.</div>
+      </div>
+      <div class="advice-block">
+        <div class="advice-label">Get outside & drink water</div>
+        <div class="advice-text">Even 10 minutes of fresh air changes your state. Then a big glass of water. Small things.</div>
+      </div>
+      <div class="advice-block highlight">
+        <div class="advice-label">Reframe what success looks like</div>
+        <div class="advice-text">Maintaining <strong>60% of a good plan during a crisis is a win</strong>, not a failure. You are doing brilliantly.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showEve(id, btn) {
+    document.getElementById('montuwed').style.display = 'none';
+    document.getElementById('thufri').style.display = 'none';
+    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
